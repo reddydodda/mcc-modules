@@ -1,0 +1,57 @@
+# Multipath configuration file
+
+{% if values.multipath_conf.defaults %}
+defaults {
+{% for key, value in values.multipath_conf.defaults.items() %}
+    {{ key }} {{ value }}
+{% endfor %}
+}
+{% endif %}
+
+{% if values.multipath_conf.blacklist %}
+blacklist {
+{% for item in values.multipath_conf.blacklist %}
+{% for key, value in item.items() %}
+    {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
+}
+{% endif %}
+
+{% if values.multipath_conf.blacklist_exceptions %}
+blacklist_exceptions {
+{% for item in values.multipath_conf.blacklist_exceptions %}
+{% for key, value in item.items() %}
+    {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
+}
+{% endif %}
+
+{% if values.multipath_conf.devices %}
+devices {
+{% for device in values.multipath_conf.devices %}
+    device {
+        vendor "{{ device.vendor }}"
+        product "{{ device.product }}"
+{% for key, value in device.items() %}
+{% if key not in ['vendor', 'product'] %}
+        {{ key }} {{ value }}
+{% endif %}
+{% endfor %}
+    }
+{% endfor %}
+}
+{% endif %}
+
+{% if values.multipath_conf.multipaths %}
+multipaths {
+{% for multipath in values.multipath_conf.multipaths %}
+    multipath {
+{% for key, value in multipath.items() %}
+        {{ key }} {{ value }}
+{% endfor %}
+    }
+{% endfor %}
+}
+{% endif %}

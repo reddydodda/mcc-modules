@@ -1,0 +1,6 @@
+name: multipath
+description: 'Module for multipath configuration'
+version: 1.0.0
+valuesJsonSchema: schema.json
+docURL: https://docs.mirantis.com
+playbook: main.yaml

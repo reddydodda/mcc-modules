@@ -1,0 +1,45 @@
+apiVersion: kaas.mirantis.com/v1alpha1
+kind: HostOSConfiguration
+metadata:
+  name: multipath-config
+  namespace: default
+spec:
+  configs:
+  - module: multipath
+    moduleVersion: 1.0.0
+    values:
+      install_multipath: true
+      multipath_conf:
+        defaults:
+          user_friendly_names: "yes"
+          polling_interval: "10"
+        devices:
+          - vendor: "DellEMC"
+            product: "PowerStore"
+            path_selector: "queue-length 0"
+            path_grouping_policy: "group_by_prio"
+            path_checker: "tur"
+            detect_prio: "yes"
+            failback: "immediate"
+            no_path_retry: "3"
+            rr_min_io_rq: "1"
+            hardware_handler: "1 alua"
+            prio: "alua"
+            fast_io_fail_tmo: "15"
+            max_sectors_kb: "1024"
+          - vendor: "PURE"
+            product: "FlashArray"
+            path_selector: "queue-length 0"
+            hardware_handler: "1 alua"
+            path_grouping_policy: "group_by_prio"
+            prio: "alua"
+            failback: "immediate"
+            path_checker: "tur"
+            fast_io_fail_tmo: "10"
+            dev_loss_tmo: "60"
+            no_path_retry: "0"
+            features: "0"
+      start_service: true
+  machineSelector:
+    matchLabels:
+      storage-node: "true"

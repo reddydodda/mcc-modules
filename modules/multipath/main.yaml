@@ -1,0 +1,35 @@
+---
+- name: Configure Multipath
+  hosts: all
+  become: true
+  tasks:
+    - name: Install multipath tools
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - device-mapper-multipath
+        - multipath-tools
+      when: values.install_multipath | default(true)
+
+    - name: Configure multipath.conf
+      template:
+        src: multipath.conf.j2
+        dest: /etc/multipath.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart multipath
+
+    - name: Start and enable multipath service
+      systemd:
+        name: multipathd
+        state: started
+        enabled: yes
+      when: values.start_service | default(true)
+
+  handlers:
+    - name: Restart multipath
+      systemd:
+        name: multipathd
+        state: restarted

@@ -1,0 +1,9 @@
+apiVersion: kaas.mirantis.com/v1alpha1
+kind: HostOSConfigurationModules
+metadata:
+  name: mcc-modules
+spec:
+  modules:
+    - name: multipath
+      version: 1.0.0
+      sha256sum: 0ce614e78bfb3c22da296c3dcea50fa0f60bd647488c987b0dfca28d4cd64a0a
