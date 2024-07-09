@@ -52,19 +52,11 @@ process_module() {
 
     # Create tgz file
     local tgz_name="${module_name}-${version}.tgz"
-    local versioned_dir="${module_name}-${version}"
 
     echo "Creating tgz file: ${FILES_DIR}/${tgz_name}"
 
-    # Create a temporary directory with the versioned name
-    local temp_dir=$(mktemp -d)
-    cp -R "${module_dir}" "${temp_dir}/${versioned_dir}"
-
     # Create tgz archive
-    tar -czf "${FILES_DIR}/${tgz_name}" -C "${temp_dir}" "${versioned_dir}"
-
-    # Clean up the temporary directory
-    rm -rf "${temp_dir}"
+    tar -czf "${FILES_DIR}/${tgz_name}" -C "${MODULES_DIR}" "${module_name}"
 
     if [ $? -ne 0 ]; then
         echo "Error: Failed to create tgz file for ${module_name}"
