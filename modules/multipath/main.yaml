@@ -8,7 +8,7 @@
         name: "{{ item }}"
         state: present
       loop:
-        - device-mapper-multipath
+        - multipath-tools-boot
         - multipath-tools
       when: values.install_multipath | default(true)
 
