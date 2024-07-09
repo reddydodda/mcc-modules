@@ -56,7 +56,7 @@ process_module() {
     echo "Creating tgz file: ${FILES_DIR}/${tgz_name}"
 
     # Create tgz archive
-    tar -czf "${FILES_DIR}/${tgz_name}" -C "${MODULES_DIR}" "${module_name}"
+    tar -czf "${FILES_DIR}/${tgz_name}" -C "${MODULES_DIR}" .
 
     if [ $? -ne 0 ]; then
         echo "Error: Failed to create tgz file for ${module_name}"
