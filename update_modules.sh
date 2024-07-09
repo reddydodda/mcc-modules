@@ -38,6 +38,8 @@ process_module() {
     local module_dir="$1"
     local module_name=$(basename "${module_dir}")
     
+    echo "Processing module: ${module_name}"
+    
     # Extract version from metadata.yaml
     local version=$(awk '/version:/ {print $2}' "${module_dir}/metadata.yaml" | tr -d '"')
     
@@ -45,19 +47,38 @@ process_module() {
         echo "Error: Could not extract version for ${module_name}"
         return 1
     fi
-
+    
+    echo "Module version: ${version}"
+    
     # Create tarball
-    local tarball_name="${module_name}-${version}.tar.gz"
-
+    local tarball_name="${module_name}.tar.gz"
+    
+    echo "Creating tarball: ${FILES_DIR}/${tarball_name}"
+    
     # Create tarball directly from the module directory
-    tar -czf "${FILES_DIR}/${tarball_name}" -C "${MODULES_DIR}" --transform "s/^${module_name}/${module_name}-${version}/" "${module_name}"
-
+    tar -czvf "${FILES_DIR}/${tarball_name}" -C "${MODULES_DIR}" "${module_name}"
+    
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create tarball for ${module_name}"
+        return 1
+    fi
+    
+    # Check if the tarball was created
+    if [ ! -f "${FILES_DIR}/${tarball_name}" ]; then
+        echo "Error: Tarball ${tarball_name} was not created"
+        return 1
+    fi
+    
+    echo "Tarball created successfully"
+    
     # Generate SHA256 sum
     local sha256sum=$(shasum -a 256 "${FILES_DIR}/${tarball_name}" | awk '{print $1}')
-
+    
+    echo "SHA256 sum: ${sha256sum}"
+    
     # Construct GitHub URL for the tarball
     local github_url="${GITHUB_REPO_URL}/raw/main/files/${tarball_name}"
-
+    
     # Append to YAML file
     cat >> "${OUTPUT_YAML}" << EOF
     - name: ${module_name}
@@ -65,7 +86,7 @@ process_module() {
       sha256sum: ${sha256sum}
       url: ${github_url}
 EOF
-
+    
     echo "Processed ${module_name} version ${version}"
 }
 
