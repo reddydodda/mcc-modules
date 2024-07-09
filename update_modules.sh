@@ -52,11 +52,19 @@ process_module() {
 
     # Create tarball
     local tarball_name="${module_name}-${version}.tar.gz"
+    local versioned_dir="${module_name}-${version}"
 
     echo "Creating tarball: ${FILES_DIR}/${tarball_name}"
 
-    # Create tarball directly from the module directory
-    tar -czvf "${FILES_DIR}/${tarball_name}" -C "${MODULES_DIR}" "${module_name}"
+    # Create a temporary directory with the versioned name
+    local temp_dir=$(mktemp -d)
+    cp -R "${module_dir}" "${temp_dir}/${versioned_dir}"
+
+    # Create tarball from the temporary directory
+    tar -czvf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${versioned_dir}"
+
+    # Clean up the temporary directory
+    rm -rf "${temp_dir}"
 
     if [ $? -ne 0 ]; then
         echo "Error: Failed to create tarball for ${module_name}"
