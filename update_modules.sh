@@ -50,42 +50,42 @@ process_module() {
 
     echo "Module version: ${version}"
 
-    # Create tarball
-    local tarball_name="${module_name}-${version}.tar.gz"
+    # Create tgz file
+    local tgz_name="${module_name}-${version}.tgz"
     local versioned_dir="${module_name}-${version}"
 
-    echo "Creating tarball: ${FILES_DIR}/${tarball_name}"
+    echo "Creating tgz file: ${FILES_DIR}/${tgz_name}"
 
     # Create a temporary directory with the versioned name
     local temp_dir=$(mktemp -d)
     cp -R "${module_dir}" "${temp_dir}/${versioned_dir}"
 
-    # Create tarball from the temporary directory
-    tar -czvf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${versioned_dir}"
+    # Create tgz archive
+    tar -czf "${FILES_DIR}/${tgz_name}" -C "${temp_dir}" "${versioned_dir}"
 
     # Clean up the temporary directory
     rm -rf "${temp_dir}"
 
     if [ $? -ne 0 ]; then
-        echo "Error: Failed to create tarball for ${module_name}"
+        echo "Error: Failed to create tgz file for ${module_name}"
         return 1
     fi
 
-    # Check if the tarball was created
-    if [ ! -f "${FILES_DIR}/${tarball_name}" ]; then
-        echo "Error: Tarball ${tarball_name} was not created"
+    # Check if the tgz file was created
+    if [ ! -f "${FILES_DIR}/${tgz_name}" ]; then
+        echo "Error: TGZ file ${tgz_name} was not created"
         return 1
     fi
 
-    echo "Tarball created successfully"
+    echo "TGZ file created successfully"
 
     # Generate SHA256 sum
-    local sha256sum=$(shasum -a 256 "${FILES_DIR}/${tarball_name}" | awk '{print $1}')
+    local sha256sum=$(shasum -a 256 "${FILES_DIR}/${tgz_name}" | awk '{print $1}')
 
     echo "SHA256 sum: ${sha256sum}"
 
-    # Construct GitHub URL for the tarball
-    local github_url="${GITHUB_REPO_URL}/raw/main/files/${tarball_name}"
+    # Construct GitHub URL for the tgz file
+    local github_url="${GITHUB_REPO_URL}/raw/main/files/${tgz_name}"
 
     # Append to YAML file
     cat >> "${OUTPUT_YAML}" << EOF
