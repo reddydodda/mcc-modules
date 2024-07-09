@@ -21,12 +21,9 @@
         mode: '0644'
       notify: Restart multipath
 
-    - name: Start and enable multipath service
-      systemd:
-        name: multipathd
-        state: started
-        enabled: yes
-      when: values.start_service | default(true)
+    - name: Configure iSCSI
+      import_tasks: iscsi_config.yaml
+      when: iscsi_enabled | bool
 
   handlers:
     - name: Restart multipath

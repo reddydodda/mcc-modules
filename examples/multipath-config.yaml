@@ -8,6 +8,11 @@ spec:
   - module: multipath
     moduleVersion: 1.0.0
     values:
+      # iscsi config
+      iscsi_enabled: true
+      iscsi_config:
+        initiator_name_prefix: "iqn.2000-05.com.mirantis"
+      # Multipath config
       install_multipath: true
       multipath_conf:
         defaults:
@@ -39,7 +44,6 @@ spec:
             dev_loss_tmo: "60"
             no_path_retry: "0"
             features: "0"
-      start_service: true
   machineSelector:
     matchLabels:
       storage-node: "true"

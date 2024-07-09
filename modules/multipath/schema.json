@@ -21,13 +21,6 @@
             "additionalProperties": true
           }
         },
-        "blacklist_exceptions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": true
-          }
-        },
         "devices": {
           "type": "array",
           "items": {
@@ -49,11 +42,27 @@
         }
       }
     },
-    "start_service": {
+    "iscsi_enabled": {
       "type": "boolean",
-      "description": "Whether to start and enable the multipath service"
+      "description": "Whether to enable and configure iSCSI"
+    },
+    "iscsi_config": {
+      "type": "object",
+      "description": "Configuration options for iSCSI",
+      "properties": {
+        "initiator_name_prefix": {
+          "type": "string",
+          "description": "Prefix for the iSCSI initiator name",
+          "default": "iqn.2000-05.com.mirantis"
+        },
+        "custom_initiator_name": {
+          "type": "string",
+          "description": "Custom iSCSI initiator name (if not using hostname)"
+        }
+      },
+      "additionalProperties": false
     }
   },
-  "required": ["install_multipath", "multipath_conf"],
+  "required": ["multipath_conf"],
   "additionalProperties": false
 }

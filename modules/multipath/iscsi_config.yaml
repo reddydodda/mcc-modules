@@ -1,0 +1,27 @@
+---
+- name: Update iSCSI initiator name
+  block:
+    - name: Get hostname
+      command: hostname
+      register: hostname_result
+      changed_when: false
+
+    - name: Update initiatorname.iscsi file
+      lineinfile:
+        path: /etc/iscsi/initiatorname.iscsi
+        regexp: '^InitiatorName=iqn\.1993-08\.org\.debian'
+        line: 'InitiatorName=iqn.2000-05.com.mirantis:{{ hostname_result.stdout }}'
+        backrefs: yes
+
+    - name: Ensure correct permissions on initiatorname.iscsi
+      file:
+        path: /etc/iscsi/initiatorname.iscsi
+        owner: root
+        group: root
+        mode: '0644'
+
+- name: Restart iSCSI service
+  systemd:
+    name: iscsid
+    state: restarted
+    enabled: yes
