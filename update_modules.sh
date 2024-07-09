@@ -45,20 +45,12 @@ process_module() {
         echo "Error: Could not extract version for ${module_name}"
         return 1
     fi
-    
+
     # Create tarball
     local tarball_name="${module_name}-${version}.tar.gz"
-    local temp_dir=$(mktemp -d)
-    local module_version_dir="${module_name}-${version}"
 
-    # Copy files to a directory with the desired name
-    cp -a "${module_dir}" "${temp_dir}/${module_version_dir}"
-
-    # Create tarball from the temp directory
-    tar -czf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${module_version_dir}"
-
-    # Clean up
-    rm -rf "${temp_dir}"
+    # Create tarball directly from the module directory
+    tar -czf "${FILES_DIR}/${tarball_name}" -C "${MODULES_DIR}" --transform "s/^${module_name}/${module_name}-${version}/" "${module_name}"
 
     # Generate SHA256 sum
     local sha256sum=$(shasum -a 256 "${FILES_DIR}/${tarball_name}" | awk '{print $1}')
@@ -73,7 +65,7 @@ process_module() {
       sha256sum: ${sha256sum}
       url: ${github_url}
 EOF
-    
+
     echo "Processed ${module_name} version ${version}"
 }
 
