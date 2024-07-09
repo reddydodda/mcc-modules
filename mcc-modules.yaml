@@ -6,5 +6,5 @@ spec:
   modules:
     - name: multipath
       version: 1.0.0
-      sha256sum: 279ea83324f74630216f290c67bcc0a184a8f17c3ff50a820a8bd340670b3673
+      sha256sum: 0278de418a9f5d98bc143bbfa462ebc0a233a45c0603fa6d6bbd9b251dc1bfb0
       url: https://github.com/reddydodda/mcc-modules/raw/main/files/multipath-1.0.0.tar.gz

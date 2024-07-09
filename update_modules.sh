@@ -49,13 +49,15 @@ process_module() {
     # Create tarball
     local tarball_name="${module_name}-${version}.tar.gz"
     local temp_dir=$(mktemp -d)
-    local module_version_dir="${temp_dir}/${module_name}-${version}"
+    local module_version_dir="${module_name}-${version}"
 
-    mkdir -p "${module_version_dir}"
-    cp -a "${module_dir}"/* "${module_version_dir}"/
+    # Copy files to a directory with the desired name
+    cp -a "${module_dir}" "${temp_dir}/${module_version_dir}"
 
-    tar -czf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${module_name}-${version}"
+    # Create tarball from the temp directory
+    tar -czf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${module_version_dir}"
 
+    # Clean up
     rm -rf "${temp_dir}"
 
     # Generate SHA256 sum
