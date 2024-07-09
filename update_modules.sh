@@ -48,14 +48,22 @@ process_module() {
     
     # Create tarball
     local tarball_name="${module_name}-${version}.tar.gz"
-    tar -czf "${FILES_DIR}/${tarball_name}" -C "${MODULES_DIR}" "${module_name}"
-    
+    local temp_dir=$(mktemp -d)
+    local module_version_dir="${temp_dir}/${module_name}-${version}"
+
+    mkdir -p "${module_version_dir}"
+    cp -a "${module_dir}"/* "${module_version_dir}"/
+
+    tar -czf "${FILES_DIR}/${tarball_name}" -C "${temp_dir}" "${module_name}-${version}"
+
+    rm -rf "${temp_dir}"
+
     # Generate SHA256 sum
     local sha256sum=$(shasum -a 256 "${FILES_DIR}/${tarball_name}" | awk '{print $1}')
-    
+
     # Construct GitHub URL for the tarball
     local github_url="${GITHUB_REPO_URL}/raw/main/files/${tarball_name}"
-    
+
     # Append to YAML file
     cat >> "${OUTPUT_YAML}" << EOF
     - name: ${module_name}
