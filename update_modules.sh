@@ -28,7 +28,7 @@ cat > "${OUTPUT_YAML}" << EOF
 apiVersion: kaas.mirantis.com/v1alpha1
 kind: HostOSConfigurationModules
 metadata:
-  name: mcc-modules
+  name: mcc-ps-modules
 spec:
   modules:
 EOF
