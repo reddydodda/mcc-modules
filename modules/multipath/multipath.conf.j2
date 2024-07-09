@@ -1,6 +1,6 @@
 # Multipath configuration file
 
-{% if values.multipath_conf.defaults %}
+{% if values.multipath_conf.defaults is defined %}
 defaults {
 {% for key, value in values.multipath_conf.defaults.items() %}
     {{ key }} {{ value }}
@@ -8,7 +8,7 @@ defaults {
 }
 {% endif %}
 
-{% if values.multipath_conf.blacklist %}
+{% if values.multipath_conf.blacklist is defined and values.multipath_conf.blacklist %}
 blacklist {
 {% for item in values.multipath_conf.blacklist %}
 {% for key, value in item.items() %}
@@ -18,17 +18,7 @@ blacklist {
 }
 {% endif %}
 
-{% if values.multipath_conf.blacklist_exceptions %}
-blacklist_exceptions {
-{% for item in values.multipath_conf.blacklist_exceptions %}
-{% for key, value in item.items() %}
-    {{ key }} {{ value }}
-{% endfor %}
-{% endfor %}
-}
-{% endif %}
-
-{% if values.multipath_conf.devices %}
+{% if values.multipath_conf.devices is defined %}
 devices {
 {% for device in values.multipath_conf.devices %}
     device {
@@ -44,7 +34,7 @@ devices {
 }
 {% endif %}
 
-{% if values.multipath_conf.multipaths %}
+{% if values.multipath_conf.multipaths is defined %}
 multipaths {
 {% for multipath in values.multipath_conf.multipaths %}
     multipath {
